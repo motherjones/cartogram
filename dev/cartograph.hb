@@ -1,0 +1,46 @@
+<html>
+<head>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="js/libs/colorbrewer.js"></script>
+<script src="js/libs/topojson.js"></script>
+<script src="js/libs/cartogram.js"></script>
+
+
+<link rel="stylesheet" href="{{css}}" type="text/css"></style>
+<style>
+      #map-container {
+        height: 500px;
+        text-align: center;
+        position: relative;
+        margin: 20px 0;
+      }
+
+      #map {
+        display: block;
+        position: absolute;
+        background: #fff;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+</style>
+</head>
+<body>
+
+<label>Scale by <select id="field"></select></label>
+<label>in <select id="year"></select></label>
+
+<h1 id="status"></h1>
+
+I am a template!!! look at this variable
+{{name}}
+
+
+<div id="map-container">
+    <svg id="map"></svg>
+</div>
+
+<script src="{{js}}" type="text/javascript"></script>
+</body>
+</html>
