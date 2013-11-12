@@ -15,10 +15,10 @@ var percent = (function() {
     var fmt = d3.format(".2f");
     return function(n) { return fmt(n) + "%"; };
   })(),
+  years = [1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010],
   fields = [
-    {name: "Birth Rate", id: "birthrate", key: "BIRTHS%d", years: [2011, 2012], format: percent},
+    {name: "UFO Sightings", id: "sightings", key: "sighting%d", years: years },
   ],
-  years = [2010, 2011, 2012],
   fieldsById = d3.nest()
     .key(function(d) { return d.id; })
     .rollup(function(d) { return d[0]; })
@@ -48,7 +48,7 @@ fieldSelect.selectAll("option")
 var yearSelect = d3.select("#year")
 .on("change", function(e) {
   year = years[this.selectedIndex];
-  location.hash = "#" + year;
+  location.hash = "#" + field.id + '/' +  year;
 });
 
 yearSelect.selectAll("option")
@@ -106,7 +106,7 @@ var segmentized = location.search === "?segmentized",
 d3.json(url, function(topo) {
 topology = topo;
 geometries = topology.objects.states.geometries;
-d3.csv("data/NST_EST2012_ALLDATA.csv", function(data) {
+d3.csv("data/ufo_by_state.csv", function(data) {
   rawData = data;
   dataById = d3.nest()
     .key(function(d) { return d.Name; })
@@ -126,7 +126,7 @@ states = states.data(features)
   .append("path")
     .attr("class", "state")
     .attr("id", function(d) {
-      return d.properties.NAME;
+      return d.properties.Name;
     })
     .attr("fill", "#fafafa")
     .attr("d", path);
@@ -218,15 +218,15 @@ body.classed("updating", false);
 }
 
 var deferredUpdate = (function() {
-var timeout;
-return function() {
-  var args = arguments;
-  clearTimeout(timeout);
-  stat.text("calculating...");
-  return timeout = setTimeout(function() {
-    update.apply(null, arguments);
-  }, 10);
-};
+    var timeout;
+    return function() {
+        var args = arguments;
+        clearTimeout(timeout);
+        stat.text("calculating...");
+        return timeout = setTimeout(function() {
+            update.apply(null, arguments);
+        }, 10);
+    };
 })();
 
 var hashish = d3.selectAll("a.hashish")
@@ -237,10 +237,13 @@ var hashish = d3.selectAll("a.hashish")
 function parseHash() {
 var parts = location.hash.substr(1).split("/"),
     desiredFieldId = parts[0],
-    desiredYear = +parts[1];
+    desiredYear = parseInt(parts[1]);
 
 field = fieldsById[desiredFieldId] || fields[0];
+console.log(desiredYear);
+console.log(years);
 year = (years.indexOf(desiredYear) > -1) ? desiredYear : years[0];
+console.log(year);
 
 fieldSelect.property("selectedIndex", fields.indexOf(field));
 
